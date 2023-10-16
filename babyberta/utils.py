@@ -4,8 +4,8 @@ from torch.nn import CrossEntropyLoss
 from typing import Tuple, List, Dict
 from itertools import islice
 
-from babyberta import configs
-
+#from babyberta import configs
+import configs
 loss_fct = CrossEntropyLoss()
 
 

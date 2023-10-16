@@ -5,7 +5,7 @@ from pathlib import Path
 from transformers.models.roberta import RobertaTokenizerFast
 
 from babyberta import configs
-from babyberta.io import load_tokenizer
+from babyberta.iando import load_tokenizer
 
 PATH_TO_SENTENCES = Path('/home/ph/Zorro/sentences/babyberta')
 

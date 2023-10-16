@@ -4,23 +4,28 @@ import pandas as pd
 from pathlib import Path
 import torch
 import random
-
+import os
 import transformers
 from transformers.models.roberta import RobertaForMaskedLM, RobertaConfig
 from transformers import AdamW, get_linear_schedule_with_warmup
 
-from babyberta import configs
-from babyberta.io import load_sentences_from_file, load_tokenizer
-from babyberta.params import Params
-from babyberta.utils import split, make_sequences, forward_mlm
-from babyberta.probing import do_probing
-from babyberta.dataset import DataSet
-
+#from babyberta import configs
+#from babyberta.io import load_sentences_from_file, load_tokenizer
+#from babyberta.params import Params
+#from babyberta.utils import split, make_sequences, forward_mlm
+#from babyberta.probing import do_probing
+#from babyberta.dataset import DataSet
+import configs
+from iando import load_sentences_from_file, load_tokenizer
+from params import Params
+from utils import split, make_sequences, forward_mlm
+from probing import do_probing
+from dataset import DataSet
 
 def main(param2val):
-
-    assert transformers.__version__ == '4.3.3'
-    assert torch.__version__.startswith('1.6.0')
+    #print(transformers.__version__, torch.__version__.startswith)
+    #assert transformers.__version__ == '4.3.3'
+    #assert torch.__version__.startswith('1.6.0')
 
     # params
     params = Params.from_param2val(param2val)
@@ -32,10 +37,9 @@ def main(param2val):
     project_path = Path(param2val['project_path'])
 
     # probing path - contains probing sentences
-    probing_path = configs.Dirs.probing_sentences
+    probing_path = configs.Dirs.probing
     if not probing_path.exists():
-        raise FileNotFoundError(f'Path to probing sentences does not exist: {probing_path}.'
-                                'Probing sentences can be downloaded from github.com/phueb/Zorro/sentences')
+        raise FileNotFoundError('Path to probing sentences does not exist: {probing_path}.')
 
     # save_path - locations where probing results are saved
     save_path = Path(param2val['save_path'])
@@ -57,7 +61,7 @@ def main(param2val):
                                                        allow_discard=True)
         print(f'Loaded {len(sentences_in_corpus):>12,} sentences from {corpus_name}')
         sentences += sentences_in_corpus
-
+    print('sentences loaded')
     # training order (do this after loading all corpora, otherwise re-ordering is performed within each corpus
     if params.training_order == 'shuffled':
         random.shuffle(sentences)
@@ -91,13 +95,14 @@ def main(param2val):
                            initializer_range=params.initializer_range,
                            )
     # load weights from previous checkpoint
-    if params.load_from_checkpoint.startswith('param'):
-        path_tmp = Path(param2val['project_path']) / 'runs' / params.load_from_checkpoint
-        model_files = list(path_tmp.rglob('**/saves/*.bin'))
-        print(f'Found {len(model_files)} saved models')
-        path_cpt = random.choice(model_files)
-        print(f'Trying to load model from {path_cpt.parent}')
-        model = RobertaForMaskedLM.from_pretrained(path_cpt.parent)
+    if params.load_from_checkpoint != 'none':
+        path_latest_model = os.path.join(save_path, params.load_from_checkpoint) 
+        #model_files = list(path_tmp.rglob('**/saves/*.bin'))
+        #print(f'Found {len(model_files)} saved models')
+        #path_cpt = random.choice(model_files)
+        #print(f'Trying to load model from {path_cpt.parent}')
+        model = RobertaForMaskedLM.from_pretrained(path_latest_model)
+        #model = RobertaForMaskedLM.from_pretrained(path_cpt.parent)
     # initialize random weights
     else:
         model = RobertaForMaskedLM(config=config)
@@ -179,6 +184,7 @@ def main(param2val):
                     print('Detected last eval step. Exiting training loop', flush=True)
                     break
 
+                #EH: maybe can be used if we fix nr of epochs manually
                 if configs.Training.max_step is not None and step >= configs.Training.max_step:
                     print('Reached manually set max_step. Exiting training loop', flush=True)
                     break
@@ -202,7 +208,7 @@ def main(param2val):
         s.name = name
         performance_curves.append(s)
 
-    # save  # TODO these are not saved at the same training step across differently sized corpora
+    # save  # TODO these are not saved at the same training step across differently sized corpora, EH: that's okay here
     model.save_pretrained(save_path)
     config.save_pretrained(save_path)
     tokenizer.save(str(save_path / 'tokenizer.json'), pretty=True)

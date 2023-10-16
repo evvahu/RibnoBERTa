@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 from collections import defaultdict
 
-from babyberta.io import load_sentences_from_file, load_tokenizer
+from babyberta.iando import load_sentences_from_file, load_tokenizer
 from babyberta.utils import make_sequences
 from babyberta.dataset import DataSet
 from babyberta.params import Params, param2default

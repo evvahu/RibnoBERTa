@@ -74,6 +74,7 @@ param2default = {
     'intermediate_size': 1024,
     'initializer_range': 0.02,  # stdev of trunc normal for initializing all weights
     'layer_norm_eps': 1e-5,  # 1e-5 default in fairseq (and slightly better performance), 1e-12 default in hgugingface,
+    'project_path': '../test_project'
 }
 
 
@@ -118,6 +119,12 @@ class Params:
     intermediate_size: int
     initializer_range: float
     layer_norm_eps: float
+
+    # addeed by EH
+    job_name = str
+    param_name = str
+    project_path = str
+    save_path = str
 
     @classmethod
     def from_param2val(cls, param2val):

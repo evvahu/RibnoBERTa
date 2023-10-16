@@ -9,16 +9,17 @@ class Dirs:
     saved_models = root / 'saved_models'
 
     # probing data can be found at https://github.com/phueb/Zorro/tree/master/sentences
-    probing_sentences = Path('/') / 'media' / 'ludwig_data' / 'Zorro' / 'sentences' / 'babyberta'
-    probing_results = Path.home() / 'Zorro' / 'runs'
+    #probing_sentences = Path('/') / 'media' / 'ludwig_data' / 'Zorro' / 'sentences' / 'babyberta'
+    probing = root / 'probing'
+    probing_results = root / 'probing_results'
 
     # wikipedia sentences file was created using https://github.com/akb89/witokit
-    wikipedia_sentences = Path.home() / 'witokit_download_1' / 'processed.txt'
+    #wikipedia_sentences = Path.home() / 'witokit_download_1' / 'processed.txt'
 
 
 class Data:
     min_sentence_length = 3
-    train_prob = 1.0  # probability that sentence is assigned to train split
+    train_prob = 0.8  # probability that sentence is assigned to train split
     mask_symbol = '<mask>'
     pad_symbol = '<pad>'
     unk_symbol = '<unk>'

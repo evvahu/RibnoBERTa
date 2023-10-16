@@ -12,9 +12,10 @@ from tokenizers import Encoding
 from tokenizers import Tokenizer
 
 
-from babyberta import configs
-from babyberta.params import Params
-
+#from babyberta import configs
+#from babyberta.params import Params
+import configs
+from params import Params
 
 def smart_tokenize(tokenizer: Union[Tokenizer, RobertaTokenizer],
                    sequence: str,

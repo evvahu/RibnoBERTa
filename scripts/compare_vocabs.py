@@ -8,7 +8,7 @@ from pathlib import Path
 from transformers.models.roberta import RobertaTokenizer
 
 from babyberta import configs
-from babyberta.io import load_tokenizer
+from babyberta.iando import load_tokenizer
 
 tokenizer_base = RobertaTokenizer.from_pretrained("roberta-base")
 
