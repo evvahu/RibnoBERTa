@@ -8,6 +8,8 @@ import os
 import transformers
 from transformers.models.roberta import RobertaForMaskedLM, RobertaConfig
 from transformers import AdamW, get_linear_schedule_with_warmup
+from probing_SR import do_probing_SR
+from probing_GR import do_probing_GR
 
 #from babyberta import configs
 #from babyberta.io import load_sentences_from_file, load_tokenizer
@@ -19,7 +21,7 @@ import configs
 from iando import load_sentences_from_file, load_tokenizer
 from params import Params
 from utils import split, make_sequences, forward_mlm
-from probing import do_probing
+from babyberta.probing_PH import do_probing
 from dataset import DataSet
 
 def main(param2val):
@@ -29,25 +31,27 @@ def main(param2val):
 
     # params
     params = Params.from_param2val(param2val)
-    params.framework = 'huggingface'
-    params.is_huggingface_recommended = False
-    print(params, flush=True)
+    #params.framework = 'huggingface'
+    #params.is_huggingface_recommended = False
+    #print(params, flush=True)
 
     #  path to root folder on shared drive where results are saved, and data is loaded
     project_path = Path(param2val['project_path'])
 
     # probing path - contains probing sentences
     probing_path = configs.Dirs.probing
+
     if not probing_path.exists():
         raise FileNotFoundError('Path to probing sentences does not exist: {probing_path}.')
 
-    # save_path - locations where probing results are saved
+    # save_path - locations where results are saved
     save_path = Path(param2val['save_path'])
     if not save_path.exists():
         save_path.mkdir(parents=True)
 
     # Byte-level BPE tokenizer
     path_tokenizer_config = project_path / 'data' / 'tokenizers' / f'{params.tokenizer}.json'
+    print(path_tokenizer_config)
     tokenizer = load_tokenizer(path_tokenizer_config, params.max_input_length)
     vocab_size = len(tokenizer.get_vocab())
     print(f'Vocab size={vocab_size}')
@@ -96,19 +100,23 @@ def main(param2val):
                            )
     # load weights from previous checkpoint
     if params.load_from_checkpoint != 'none':
-        path_latest_model = os.path.join(save_path, params.load_from_checkpoint) 
+        print('loading LM model from checkpoint with name {}'.format(params.load_from_checkpoint))
+        path_latest_model = params.load_from_checkpoint #os.path.join(save_path, params.load_from_checkpoint) 
         #model_files = list(path_tmp.rglob('**/saves/*.bin'))
         #print(f'Found {len(model_files)} saved models')
         #path_cpt = random.choice(model_files)
         #print(f'Trying to load model from {path_cpt.parent}')
+
         model = RobertaForMaskedLM.from_pretrained(path_latest_model)
         #model = RobertaForMaskedLM.from_pretrained(path_cpt.parent)
     # initialize random weights
     else:
+        print('configuring new LM model')
         model = RobertaForMaskedLM(config=config)
 
     print('Number of parameters: {:,}'.format(model.num_parameters()), flush=True)
-    model.cuda(0)
+    if torch.cuda.is_available():
+        model.cuda(0)
 
     train_dataset = DataSet(train_sequences, tokenizer, params)
     devel_dataset = DataSet(devel_sequences, tokenizer, params)
@@ -175,16 +183,18 @@ def main(param2val):
                     name2xy.setdefault(f'dev_pps', []).append((step, pp))
                     print(f'dev pp={pp}', flush=True)
 
-                # probing on grammar test suite
-                for paradigm_path in probing_path.rglob(f'*.txt'):
-                    do_probing(save_path, paradigm_path, model, step,
-                               params.include_punctuation, tokenizer=tokenizer)
-
+                # probing on grammar test suite #@TODO : only on already trained classifier, not during first epoch, at the end of epoch 1 train classifier, always on GR probing
+                #for paradigm_path in probing_path.rglob(f'*.txt'):
+                #    do_probing_SR(save_path, paradigm_path, model, step,
+                #               params.include_punctuation, tokenizer=tokenizer)
+                #if epoch_id > 0:
+                 #   do_probing_SR() #with already trained classifier
+               # if epoch_id != 0:
+                #    do_probing_SR()
                 if max_step - step < configs.Eval.interval:  # no point in continuing training
                     print('Detected last eval step. Exiting training loop', flush=True)
                     break
 
-                #EH: maybe can be used if we fix nr of epochs manually
                 if configs.Training.max_step is not None and step >= configs.Training.max_step:
                     print('Reached manually set max_step. Exiting training loop', flush=True)
                     break
@@ -212,6 +222,37 @@ def main(param2val):
     model.save_pretrained(save_path)
     config.save_pretrained(save_path)
     tokenizer.save(str(save_path / 'tokenizer.json'), pretty=True)
+    # these paths remain the same, lm model_path is updated automatically
+    sr_config_path = os.path.join(configs.Dirs.SR_data, param2val['SR_config_path']) 
+    sr_probing_path = os.path.join(configs.Dirs.SR_data, param2val['SR_data_path'])
+
+
+    # change every epoch, has to be updated here
+    
+    cl_model_path = os.path.join(configs.Dirs.probing_results_SR, param2val['SR_cl_model_path'])
+    SR_log_path = os.path.join(configs.Dirs.probing_results_SR, param2val['SR_log_path']) 
+    SR_results_path = os.path.join(configs.Dirs.probing_results_SR, param2val['SR_res_path']) 
+    lm_model_path = save_path  #, 'lm_{}'.format(str(epoch_id))
+    if not os.path.isdir(cl_model_path):
+        os.mkdir(cl_model_path)
+    if not os.path.isdir(SR_log_path):
+        os.mkdir(SR_log_path)
+    if not os.path.isdir(SR_results_path):
+        os.mkdir(SR_results_path)
+    
+    cl_model_path_f = os.path.join(cl_model_path, 'model_epoch_{}'.format(str(epoch_id)))
+    SR_log_path_f = os.path.join(SR_log_path, 'log_epoch_{}'.format(str(epoch_id))) 
+    SR_results_path_f = os.path.join(SR_results_path, 'res_epoch_{}'.format(str(epoch_id)))
+    
+    print(SR_results_path_f)
+
+    do_probing_SR(sr_config_path, 
+                  sr_probing_path,
+                  cl_model_path_f,
+                  lm_model_path,
+                  SR_results_path_f,
+                  SR_log_path_f,
+                  training=True)
 
     print('Reached end of babyberta.job.main', flush=True)
 

@@ -1,0 +1,9 @@
+sent_id	unique_sent_id	role	verb	ids	words	sent	correct	verb_id_old	verb_found	dups	verb_id
+732197_wake_5	732197_wake	A	wake	1	that	hope that didn 't wake them up did it	True	5	True	False	4
+1013541_wake_3	1013541_wake	P	wake	4	her	perhaps you should wake her up	True	3	True	False	3
+938764_rock_3	938764_rock	A	rock	2	you	oh are you rocking her to sleep	True	3	True	False	3
+484642_rock_1	484642_rock	P	rock	2	dolly	you rock dolly to sleep	True	1	True	False	1
+623753_dry_5	623753_dry	A	dry	2,3	the,bit	and then the bit that dries him	True	5	True	False	5
+623753_dry_5	623753_dry	P	dry	6	him	and then the bit that dries him	True	5	True	False	5
+868240_bump_1	868240_bump	A	bump	0	you	you bumped on your bum	True	1	True	False	1
+565163_bump_1	565163_bump	P	bump	2,3	your,head	you bumped your head	True	1	True	False	1

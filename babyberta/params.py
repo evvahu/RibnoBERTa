@@ -134,5 +134,7 @@ class Params:
         they are relevant to job submission only.
         """
         kwargs = {k: v for k, v in param2val.items()
-                  if k not in ['job_name', 'param_name', 'project_path', 'save_path']}
+                  if k not in ['job_name', 'param_name', 'project_path', 'save_path', 'SR_config_path',
+                               'SR_data_path', 'SR_cl_model_path', 'SR_lm_model_path', 'SR_log_path', 'SR_res_path']}
         return cls(**kwargs)
+

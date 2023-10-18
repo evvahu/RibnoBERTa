@@ -57,12 +57,18 @@ def forward_mlm(model,
                 x: Dict[str, torch.tensor],
                 y: torch.tensor,
                 ) -> torch.tensor:
-    output = model(**{k: v.to('cuda') for k, v in x.items()})
+    if torch.cuda.is_available():
+        output = model(**{k: v.to('cuda') for k, v in x.items()})
+    else:
+        output  = model(**{k: v for k, v in x.items()}) 
     logits_3d = output['logits']
     logits_2d = logits_3d.view(-1, model.config.vocab_size)
     bool_1d = mask_matrix.view(-1)
     logits_for_masked_words = logits_2d[bool_1d]
-    labels = y.view(-1).cuda()
+    if torch.cuda.is_available():
+        labels = y.view(-1).cuda()
+    else:
+        labels = y.view(-1) 
     loss = loss_fct(logits_for_masked_words,  # [num masks in batch, vocab size]
                     labels)  # [num masks in batch]
 

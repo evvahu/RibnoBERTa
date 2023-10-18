@@ -7,7 +7,7 @@ from transformers.models.roberta import RobertaForMaskedLM
 
 from babyberta import configs
 from babyberta.params import param2default, Params
-from babyberta.probing import do_probing
+from babyberta.probing_PH import do_probing
 from babyberta.iando import save_yaml_file, load_tokenizer
 
 MAX_STEP = 260_000

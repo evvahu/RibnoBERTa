@@ -1,0 +1,69 @@
+INFO:root:{'label_column': 'role', 'splitting': False, 'ids': True, 'max_len': 110, 'lower_case': True, 'max_pooling': False, 'input_dim': 256, 'training_scheme': 'one_run', 'training_size': '', 'evaluate': True, 'evaluate_at_epoch_end': True, 'type_classifier': 'neural', 'dropout_rate': 0.1, 'label_nr': 2, 'hidden_dim': 200, 'lr': 0.2, 'num_epochs': 20, 'batch_size': 34, 'early_stopping': 'f1', 'patience': 5, 'features_list': ['word_length', 'pronoun'], 'scrambling': False}
+INFO:root:{'label_column': 'role', 'splitting': False, 'ids': True, 'max_len': 110, 'lower_case': True, 'max_pooling': False, 'input_dim': 256, 'training_scheme': 'one_run', 'training_size': '', 'evaluate': True, 'evaluate_at_epoch_end': True, 'type_classifier': 'neural', 'dropout_rate': 0.1, 'label_nr': 2, 'hidden_dim': 200, 'lr': 0.2, 'num_epochs': 20, 'batch_size': 34, 'early_stopping': 'f1', 'patience': 5, 'features_list': ['word_length', 'pronoun'], 'scrambling': False}
+INFO:root:starting to train classifier model
+INFO:root:Building model
+INFO:root:Start training...
+INFO:root:at epoch 1: valid_f1:0.734, best_f1:0.734, train loss: 0.686, valid loss: 0.679, valid accuracy: 0.689
+INFO:root:evaluation on test data: accuracy: 0.695, f1 score:0.685
+INFO:root:at epoch 2: valid_f1:0.796, best_f1:0.796, train loss: 0.658, valid loss: 0.666, valid accuracy: 0.792
+INFO:root:evaluation on test data: accuracy: 0.787, f1 score:0.787
+INFO:root:evaluation on test data: accuracy: 0.792, f1 score:0.791
+INFO:root:at epoch 3: valid_f1:0.784, best_f1:0.796, train loss: 0.629, valid loss: 0.656, valid accuracy: 0.793
+INFO:root:evaluation on test data: accuracy: 0.794, f1 score:0.794
+INFO:root:at epoch 4: valid_f1:0.768, best_f1:0.796, train loss: 0.595, valid loss: 0.646, valid accuracy: 0.785
+INFO:root:evaluation on test data: accuracy: 0.781, f1 score:0.781
+INFO:root:at epoch 5: valid_f1:0.752, best_f1:0.796, train loss: 0.561, valid loss: 0.637, valid accuracy: 0.775
+INFO:root:evaluation on test data: accuracy: 0.789, f1 score:0.789
+INFO:root:at epoch 6: valid_f1:0.75, best_f1:0.796, train loss: 0.543, valid loss: 0.627, valid accuracy: 0.774
+INFO:root:evaluation on test data: accuracy: 0.79, f1 score:0.789
+INFO:root:at epoch 7: valid_f1:0.754, best_f1:0.796, train loss: 0.515, valid loss: 0.619, valid accuracy: 0.776
+INFO:root:evaluation on test data: accuracy: 0.788, f1 score:0.788
+INFO:root:at epoch 8: valid_f1:0.755, best_f1:0.796, train loss: 0.489, valid loss: 0.611, valid accuracy: 0.776
+INFO:root:Start evaluating...
+INFO:root:evaluation on test data: accuracy: 0.792, f1 score:0.792
+INFO:root:{'label_column': 'role', 'splitting': False, 'ids': True, 'max_len': 110, 'lower_case': True, 'max_pooling': False, 'input_dim': 256, 'training_scheme': 'one_run', 'training_size': '', 'evaluate': True, 'evaluate_at_epoch_end': True, 'type_classifier': 'neural', 'dropout_rate': 0.1, 'label_nr': 2, 'hidden_dim': 200, 'lr': 0.2, 'num_epochs': 20, 'batch_size': 34, 'early_stopping': 'f1', 'patience': 5, 'features_list': ['word_length', 'pronoun'], 'scrambling': False}
+INFO:root:starting to train classifier model
+INFO:root:Building model
+INFO:root:Start training...
+INFO:root:at epoch 1: valid_f1:0.572, best_f1:0.572, train loss: 0.7, valid loss: 0.689, valid accuracy: 0.56
+INFO:root:evaluation on test data: accuracy: 0.565, f1 score:0.565
+INFO:root:at epoch 2: valid_f1:0.632, best_f1:0.632, train loss: 0.65, valid loss: 0.675, valid accuracy: 0.656
+INFO:root:evaluation on test data: accuracy: 0.661, f1 score:0.66
+INFO:root:at epoch 3: valid_f1:0.686, best_f1:0.686, train loss: 0.621, valid loss: 0.663, valid accuracy: 0.712
+INFO:root:evaluation on test data: accuracy: 0.708, f1 score:0.707
+INFO:root:at epoch 4: valid_f1:0.712, best_f1:0.712, train loss: 0.593, valid loss: 0.651, valid accuracy: 0.736
+INFO:root:evaluation on test data: accuracy: 0.735, f1 score:0.733
+INFO:root:at epoch 5: valid_f1:0.726, best_f1:0.726, train loss: 0.551, valid loss: 0.639, valid accuracy: 0.746
+INFO:root:evaluation on test data: accuracy: 0.752, f1 score:0.75
+INFO:root:at epoch 6: valid_f1:0.746, best_f1:0.746, train loss: 0.521, valid loss: 0.628, valid accuracy: 0.765
+INFO:root:evaluation on test data: accuracy: 0.766, f1 score:0.765
+INFO:root:at epoch 7: valid_f1:0.758, best_f1:0.758, train loss: 0.504, valid loss: 0.617, valid accuracy: 0.775
+INFO:root:evaluation on test data: accuracy: 0.773, f1 score:0.772
+INFO:root:at epoch 8: valid_f1:0.77, best_f1:0.77, train loss: 0.484, valid loss: 0.608, valid accuracy: 0.783
+INFO:root:evaluation on test data: accuracy: 0.784, f1 score:0.783
+INFO:root:at epoch 9: valid_f1:0.772, best_f1:0.772, train loss: 0.453, valid loss: 0.598, valid accuracy: 0.785
+INFO:root:evaluation on test data: accuracy: 0.786, f1 score:0.786
+INFO:root:at epoch 10: valid_f1:0.779, best_f1:0.779, train loss: 0.435, valid loss: 0.589, valid accuracy: 0.79
+INFO:root:evaluation on test data: accuracy: 0.79, f1 score:0.789
+INFO:root:at epoch 11: valid_f1:0.779, best_f1:0.779, train loss: 0.418, valid loss: 0.581, valid accuracy: 0.791
+INFO:root:evaluation on test data: accuracy: 0.787, f1 score:0.786
+INFO:root:at epoch 12: valid_f1:0.783, best_f1:0.783, train loss: 0.405, valid loss: 0.574, valid accuracy: 0.793
+INFO:root:evaluation on test data: accuracy: 0.793, f1 score:0.792
+INFO:root:at epoch 13: valid_f1:0.784, best_f1:0.784, train loss: 0.388, valid loss: 0.567, valid accuracy: 0.794
+INFO:root:evaluation on test data: accuracy: 0.792, f1 score:0.792
+INFO:root:at epoch 14: valid_f1:0.788, best_f1:0.788, train loss: 0.377, valid loss: 0.561, valid accuracy: 0.796
+INFO:root:evaluation on test data: accuracy: 0.79, f1 score:0.79
+INFO:root:evaluation on test data: accuracy: 0.792, f1 score:0.792
+INFO:root:at epoch 15: valid_f1:0.785, best_f1:0.788, train loss: 0.36, valid loss: 0.556, valid accuracy: 0.794
+INFO:root:evaluation on test data: accuracy: 0.792, f1 score:0.791
+INFO:root:at epoch 16: valid_f1:0.785, best_f1:0.788, train loss: 0.359, valid loss: 0.551, valid accuracy: 0.793
+INFO:root:evaluation on test data: accuracy: 0.792, f1 score:0.791
+INFO:root:at epoch 17: valid_f1:0.786, best_f1:0.788, train loss: 0.349, valid loss: 0.547, valid accuracy: 0.794
+INFO:root:evaluation on test data: accuracy: 0.796, f1 score:0.795
+INFO:root:at epoch 18: valid_f1:0.786, best_f1:0.788, train loss: 0.343, valid loss: 0.543, valid accuracy: 0.794
+INFO:root:evaluation on test data: accuracy: 0.795, f1 score:0.794
+INFO:root:at epoch 19: valid_f1:0.783, best_f1:0.788, train loss: 0.336, valid loss: 0.541, valid accuracy: 0.791
+INFO:root:evaluation on test data: accuracy: 0.794, f1 score:0.794
+INFO:root:at epoch 20: valid_f1:0.782, best_f1:0.788, train loss: 0.333, valid loss: 0.538, valid accuracy: 0.79
+INFO:root:Start evaluating...
+INFO:root:evaluation on test data: accuracy: 0.792, f1 score:0.792

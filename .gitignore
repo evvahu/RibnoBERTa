@@ -5,7 +5,7 @@
 .idea/*
 *.xml
 *.iml
-
+.DS_Store
 /data/corpora/aonewsela.txt
 /witokit
 /witokit/*
@@ -15,3 +15,4 @@
 /BabyBERTa-3/
 
 babyberta/__pycache__/
+SR_classification/__pycache__/

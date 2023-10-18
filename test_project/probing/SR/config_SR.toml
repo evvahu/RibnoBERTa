@@ -1,0 +1,47 @@
+# paths
+
+#path_data = '/Users/eva/Documents/Work/experiments/CDS_project/argstruct_cds/data/English/splits_BEN_CDS'
+
+label_column = 'role'
+
+# data
+splitting = false # if true, splitting method is used, if false split files have to be provided
+ids = true
+# embedding
+max_len = 110
+lower_case = true
+max_pooling = false
+#input_dim = 768
+input_dim = 256
+
+# classifier
+training_scheme = 'one_run' #
+training_size = ''
+evaluate = true
+evaluate_at_epoch_end = true 
+type_classifier = 'neural'
+
+# if type_classifier == 'neural':
+dropout_rate = 0.1
+label_nr = 2
+hidden_dim = 200
+lr = 0.2
+num_epochs = 20
+batch_size = 34
+early_stopping = 'f1'
+patience = 5
+
+# if type classifier == 'traditional':
+
+features_list = ["word_length", "pronoun"]
+
+# extra
+
+scrambling = false
+
+   
+   
+
+    
+
+    
