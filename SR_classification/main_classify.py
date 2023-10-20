@@ -118,15 +118,18 @@ def evaluate(config,model_path, device, test_loader, info, label_encoder, result
     test_accuracies = []
     test_f1_scores = []
     all_predictions = []
+    all_probabilities = []
     all_labels = []
     model.eval()
     for batch in test_loader:
         batch["device"] = device
         out = model(batch).squeeze().to("cpu")
-        #predictions = convert_logits_to_binary_predictions(out)
         predictions = torch.argmax(out, dim=1)
-        for l in predictions.tolist():
+        ids = predictions.long().view(-1,1)
+        probabilities =  out.gather(1, ids)
+        for i,l in enumerate(predictions.tolist()):
             all_predictions.append(l)
+            all_probabilities.append(probabilities[i])
         for l in batch["l"].tolist():
             all_labels.append(l) 
         test_accuracies.append(get_accuracy(predictions, batch["l"])[1])
@@ -145,12 +148,10 @@ def evaluate(config,model_path, device, test_loader, info, label_encoder, result
     i = 0
     if len(result_path) > 0:
         with open(result_path, 'w') as wf:
-            wf.write('{}\t{}\t{}\t{}\n'.format('sent_id', 'predicted', 'actual_role', 'same'))
-            for pred, labs in zip(all_predictions, all_labels):
+            wf.write('{}\t{}\t{}\t{}\t{}\n'.format('sent_id', 'predicted', 'actual_role', 'same', 'probability'))
+            for pred, labs, prob in zip(all_predictions, all_labels, all_probabilities):
                 inf = info[i]
                 i += 1
-                wf.write('{}\t{}\t{}\t{}\n'.format(inf, label_encoder.inverse_transform([pred])[0], label_encoder.inverse_transform([labs])[0], pred==labs)) 
-
-
+                wf.write('{}\t{}\t{}\t{}\t{}\n'.format(inf, label_encoder.inverse_transform([pred])[0], label_encoder.inverse_transform([labs])[0], pred==labs, prob)) 
 
 
