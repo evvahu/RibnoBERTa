@@ -239,10 +239,16 @@ def main(param2val):
         os.mkdir(SR_log_path)
     if not os.path.isdir(SR_results_path):
         os.mkdir(SR_results_path)
-    
-    cl_model_path_f = os.path.join(cl_model_path, 'model_epoch_{}'.format(str(epoch_id)))
-    SR_log_path_f = os.path.join(SR_log_path, 'log_epoch_{}'.format(str(epoch_id))) 
-    SR_results_path_f = os.path.join(SR_results_path, 'res_epoch_{}'.format(str(epoch_id)))
+
+    model_name = ''
+    if params.load_from_checkpoint == 'none':
+        model_name = 'model_0'
+    else:
+        model_name = 'model_{}.'.format(str(params.load_from_checkpoint).split('/')[-1])
+
+    cl_model_path_f = os.path.join(cl_model_path, 'model_{}'.format(str(model_name)))
+    SR_log_path_f = os.path.join(SR_log_path, 'log_{}'.format(str(model_name))) 
+    SR_results_path_f = os.path.join(SR_results_path, 'res_{}'.format(str(model_name)))
     
     print(SR_results_path_f)
 
