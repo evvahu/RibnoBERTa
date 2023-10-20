@@ -7,7 +7,6 @@ from torch.nn import CrossEntropyLoss
 from tokenizers import Tokenizer
 from transformers.models.roberta import RobertaForMaskedLM
 
-
 #from babyberta.utils import make_sequences
 #from babyberta.dataset import DataSet
 #from babyberta.iando import load_sentences_from_file, save_forced_choice_predictions
@@ -15,18 +14,20 @@ from utils import make_sequences
 from dataset import DataSet
 from iando import load_sentences_from_file, save_forced_choice_predictions 
 
-def do_probing(save_path: Path,
+def do_probing(#save_path: Path,
                paradigm_path: Path,
                model: RobertaForMaskedLM,
                step: int,
                include_punctuation: bool,
                tokenizer: Tokenizer,
+               probing_results_path: Path,
                ) -> None:
     """
     probe a model on a single paradigm.
     """
-    model.eval()
 
+    model.eval()
+    model.to('cpu')
     probe_name = paradigm_path.stem
     vocab_name = paradigm_path.parent.name
 
@@ -40,14 +41,15 @@ def do_probing(save_path: Path,
     dataset = DataSet.for_probing(sequences, tokenizer)
 
     # prepare out path
-    probing_results_path = save_path / vocab_name / f'probing_{probe_name}_results_{step}.txt'
-    if not probing_results_path.parent.exists():
-        probing_results_path.parent.mkdir(exist_ok=True, parents=True)
+    #probing_results_path = save_path / vocab_name / f'probing_{probe_name}_results_{step}.txt'
+    #if not probing_results_path.parent.exists():
+    #    probing_results_path.parent.mkdir(exist_ok=True, parents=True)
 
     # do inference
     cross_entropies = calc_cross_entropies(model, dataset)
 
     # save results  (save non-lower-cased sentences)
+
     save_forced_choice_predictions(sentences, cross_entropies, probing_results_path)
 
 
@@ -84,3 +86,16 @@ def calc_cross_entropies(model: RobertaForMaskedLM,
 
 def make_pretty(sentence: str):
     return " ".join([f"{w:<18}" for w in sentence.split()])
+
+
+if __name__ == "__main__":
+
+    par_path = Path('zorro_sentences/anaphor_agreement-pronoun_gender.txt')
+    model_path = 'language_model/'
+    tok_path = 'language_model/tokenizer.json'
+    out_path = Path('results/Grammar/en_test_zorr.txt')
+    device = torch.device("cuda")
+ 
+    model = RobertaForMaskedLM.from_pretrained(model_path, device=device)
+    tokenizer = Tokenizer.from_file(tok_path)
+    do_probing(par_path, model, 10, True, tokenizer, out_path)
