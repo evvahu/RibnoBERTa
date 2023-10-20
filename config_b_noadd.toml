@@ -1,0 +1,46 @@
+# data
+sample_with_replacement: false
+training_order: 'original'
+consecutive_masking: false
+num_sentences_per_input: 1  # if too large -> may exceed CUDA memory 1 is best for good number-agreement
+include_punctuation: true
+allow_truncated_sentences: false
+num_mask_patterns: 10  # 10 is better than fewer
+mask_pattern_size: 2  # used only if probabilistic_masking = false
+probabilistic_masking: true
+mask_probability: 0.15  # used only if probabilistic_masking = true
+leave_unmasked_prob_start: 0.0  # better performance if no unmasking
+leave_unmasked_prob: 0.0  # better performance if no unmasking
+random_token_prob: 0.1
+corpora: ()
+tokenizer: 'tokenizer_b_noadd'  # larger than 8k slightly reduces performance
+add_prefix_space: true  # better if true whether to treat first token like any other token (false in GPT-2)
+max_input_length: 128  # unacceptable performance if lower than ~32
+
+# training
+batch_size: 16
+lr: 1e-4  # 1e-4 is used in fairseq (and performs better here) and 1e-3 is default in huggingface
+num_epochs: 1  # use 1 epoch to use dynamic masking
+num_warmup_steps: 24000  # 24K used in Roberta-base
+weight_decay: 0.0
+
+# model
+load_from_checkpoint: 'none'
+hidden_size: 256
+num_layers: 8
+num_attention_heads: 8
+intermediate_size: 1024
+initializer_range: 0.02  # stdev of trunc normal for initializing all weights
+layer_norm_eps: 1e-5  # 1e-5 default in fairseq (and slightly better performance) 1e-12 default in hgugingface
+
+project_path: 'balanced_project_noaddition'
+save_path: 'balanced_save_noaddition'
+
+#probing SR
+SR_config_path: 'config_SR.toml'
+SR_data_path: 'set9'
+SR_cl_model_path: 'results/en_b_noadd'
+#SR_lm_model_path: 'results/en_b_noadd/;
+SR_log_path: 'results/en_b_noadd'
+SR_res_path: 'results/en_b_noadd'
+corpora_addition: false
