@@ -3,10 +3,18 @@ from params import Params
 from job import main
 import argparse
 import os
+import toml
 # list of corpora (ordered)
 # nr of epochs per corpora
 
-currentparams = {
+
+argp = argparse.ArgumentParser()
+argp.add_argument('config')
+args = argp.parse_args()
+
+currentparams = toml.load(args.config)
+"""
+{
     # data
     'sample_with_replacement': False,  # this must be False if corpus order is to be preserved during training
     'training_order': 'original',  # original or shuffled, use this alongside consecutive_masking=True
@@ -22,7 +30,7 @@ currentparams = {
     'leave_unmasked_prob': 0.0,  # better performance if no unmasking
     'random_token_prob': 0.1,
     'corpora': (),
-    'tokenizer': 'test_tokenizer',  # larger than 8k slightly reduces performance
+    'tokenizer': 'tokenizer_b_noadd',  # larger than 8k slightly reduces performance
     'add_prefix_space': True,  # better if True, whether to treat first token like any other token (False in GPT-2)
     'max_input_length': 128,  # unacceptable performance if lower than ~32
 
@@ -42,19 +50,22 @@ currentparams = {
     'initializer_range': 0.02,  # stdev of trunc normal for initializing all weights
     'layer_norm_eps': 1e-5,  # 1e-5 default in fairseq (and slightly better performance), 1e-12 default in hgugingface,
     
-    'project_path': 'test_project',
-    'save_path': 'test_save',
+    'project_path': 'balanced_project_noaddition',
+    'save_path': 'balanced_save_noaddition',
 
     #probing SR
     'SR_config_path': 'config_SR.toml',
-    'SR_data_path': 'set1',
+    'SR_data_path': 'set9',
     'SR_cl_model_path': 'results/test1',
     #'SR_lm_model_path':'results/test1/',
     'SR_log_path': 'results/test1',
-    'SR_res_path': 'results/test1'
+    'SR_res_path': 'results/test1',
+    'corpora_addition': False
 
 
 }
+
+"""
 #config_path, data_path, cl_model_path, lm_model_path, results_path, log_path)
 
 corpora = ['age_1_6', 'age_2_0', 'age_2_6', 'age_3_0', 'age_3_6', 'age_4_0', 'age_4_6', 'age_5_0'] #age_1_6.txt	age_2_0.txt	age_2_6.txt	age_3_0.txt	age_3_6.txt	age_4_0.txt	age_4_6.txt	age_5_0.txt
@@ -73,7 +84,11 @@ for i, corp in enumerate(corpora):
     else:
         currentparams['save_path'] = currentparams['save_path'].replace('model_{}'.format(str(i-1)), 'model_{}'.format(str(i))) 
         print('SECOND PATH', currentparams['save_path'])
-        currentparams['corpora'] = currentparams['corpora'] + (corp,)
+        if currentparams['corpora_addition']:
+            currentparams['corpora'] = currentparams['corpora'] + (corp,)
+        else:
+            currentparams['corpora'] =  (corp,)
+
         main(currentparams)
         currentparams['load_from_checkpoint'] = currentparams['save_path']
     
